@@ -20,7 +20,7 @@ def get_news_list():
         timedeltaFilterer = re.compile(RE_TIME, flags=re.I)
         soup = bs(res.text, 'html.parser')
         itemsTable = soup.find(name='table', class_='itemlist')
-        
+
         subjectRows = itemsTable.find_all(name='tr', class_='athing')
 
         for subjectRow in subjectRows:

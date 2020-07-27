@@ -37,7 +37,6 @@ class PostModelTestCase(unittest.TestCase):
             data = response.get_data(as_text=True)
             self.assertIn('<title>Hacker News Grabber API</title>', data)
 
-
     @requests_mock.Mocker()
     def test_api(self, m):
         m.get('https://news.ycombinator.com/', text=self.fixture_html)
