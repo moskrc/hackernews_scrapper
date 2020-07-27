@@ -22,8 +22,12 @@ services:
   worker:
     image: app
     command: python manage.py run_worker
+    env_file:
+      - ./.env.prod
     environment:
       - REDIS_URL=redis://redis:6379
+      - FLASK_CONFIG=production
+      - FLASK_DEBUG=0
     depends_on:
       - app
       - redis
@@ -31,13 +35,34 @@ services:
   scheduler:
     image: app
     command: python manage.py run_scheduler
+    env_file:
+      - ./.env.prod
     environment:
       - REDIS_URL=redis://redis:6379
+      - FLASK_CONFIG=production
+      - FLASK_DEBUG=0
     depends_on:
       - app
       - redis
+
+  db:
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test    
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.prod      
 
   redis:
     image: redis:latest
     ports:
       - 6379:6379
+    depends_on:
+      - db
+
+
+volumes:
+  postgres_data:

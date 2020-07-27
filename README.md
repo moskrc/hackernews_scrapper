@@ -12,7 +12,7 @@ $ docker-compose up --build
 # prod
 $ cp .env.prod.sample .env.prod
 $ docker-compose -f docker-compose.prod.yml up --build
-$ docker exec -ti app hackernews/manage.py recreate_db
+$ docker exec -ti app ./manage.py recreate_db
 ```
 
 ## How to test

@@ -10,7 +10,7 @@ from rq_scheduler import Scheduler
 from rq_scheduler.utils import setup_loghandlers
 
 from app import create_app, db
-from app.tasks import fetch_data
+
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
@@ -22,6 +22,7 @@ manager.add_command('db', MigrateCommand)
 @manager.command
 def fetch_fresh_data():
     """Fetch data from hackernews"""
+    from app.tasks import fetch_data
     fetch_data()
 
 
@@ -66,7 +67,7 @@ def setup_general():
 @manager.command
 def start_fetching():
     scheduler = Scheduler(connection=get_connection())
-
+    from app.tasks import fetch_data
     scheduler.schedule(
         scheduled_time=datetime.utcnow(),
         func=fetch_data,
