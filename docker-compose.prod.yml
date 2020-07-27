@@ -1,0 +1,43 @@
+version: '3.7'
+
+services:
+
+  app:
+    build: 
+      context: ./hackernews
+      dockerfile: Dockerfile.prod        
+    command: gunicorn --bind 0.0.0.0:8000 manage:app
+    image: app
+    container_name: app
+    expose:
+      - 8000
+    env_file:
+      - ./.env.prod
+    environment:
+      - FLASK_CONFIG=production
+      - FLASK_DEBUG=0
+    depends_on:
+      - redis
+
+  worker:
+    image: app
+    command: python manage.py run_worker
+    environment:
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - app
+      - redis
+
+  scheduler:
+    image: app
+    command: python manage.py run_scheduler
+    environment:
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - app
+      - redis
+
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379

@@ -1,0 +1,48 @@
+version: '3.7'
+
+services:
+
+  app:
+    build: ./hackernews
+    image: app
+    container_name: app
+    ports:
+      - 8000:8000
+    command: python hackernews/manage.py runserver -h 0.0.0.0 -p 8000
+
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - FLASK_CONFIG=development
+      - FLASK_DEBUG=1
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - redis
+
+  worker:
+    image: app
+    command: python hackernews/manage.py run_worker
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - app
+      - redis
+
+  scheduler:
+    image: app
+    command: python hackernews/manage.py run_scheduler
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - app
+      - redis
+
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
