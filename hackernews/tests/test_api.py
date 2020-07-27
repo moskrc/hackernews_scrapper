@@ -1,6 +1,7 @@
 import unittest
 import requests_mock
 import datetime
+import os
 from flask import json
 from app import create_app, db
 from app.utils import hn_scrapper
@@ -13,7 +14,9 @@ class PostModelTestCase(unittest.TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
-        with open('tests/fixtures/hn.html', 'r') as f:
+
+        basedir = os.path.abspath(os.path.dirname(__file__))
+        with open(os.path.join(basedir, 'fixtures/hn.html'), 'r') as f:
             self.fixture_html = f.read()
 
     def tearDown(self):

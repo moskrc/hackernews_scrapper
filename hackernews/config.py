@@ -42,8 +42,7 @@ class DevelopmentConfig(Config):
 
     @classmethod
     def init_app(cls, app):
-        print('THIS APP IS IN DEBUG MODE. \
-                YOU SHOULD NOT SEE THIS IN PRODUCTION.')
+        print('THIS APP IS IN DEBUG MODE.')
 
 
 class TestingConfig(Config):
@@ -54,8 +53,7 @@ class TestingConfig(Config):
 
     @classmethod
     def init_app(cls, app):
-        print('THIS APP IS IN TESTING MODE.  \
-                YOU SHOULD NOT SEE THIS IN PRODUCTION.')
+        print('THIS APP IS IN TESTING MODE.')
 
 
 class ProductionConfig(Config):
